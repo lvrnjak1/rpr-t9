@@ -9,4 +9,12 @@ public class Main {
         System.out.println("Gradovi su:\n" + ispisiGradove());
         glavniGrad();
     }
+
+    private static String ispisiGradove() {
+            return null;
+    }
+
+    private static void glavniGrad() {
+
+    }
 }
