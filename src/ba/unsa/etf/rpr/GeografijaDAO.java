@@ -10,18 +10,17 @@ public class GeografijaDAO {
 
     private static GeografijaDAO instance = null;
     private Connection con;
-    //private String url;
     private Statement statement;
     private PreparedStatement procitajGlGrad, procitajDrzavu, procitajSveGradove;
 
     private static void initialize() throws SQLException {
         instance = new GeografijaDAO();
     }
-
+    
     private GeografijaDAO() throws SQLException {
         //postavlja konekciju
-        //Class.forName("");
-        //con = DriverManager.getconnection(...);
+        //Class.forName("com.mysql.jdbc.Driver");
+        //con = DriverManager.getconnection("jdbc:sqlite:baza.db");
 
         //pripremiti upite
         procitajGlGrad = con.prepareStatement("SELECT g.naziv, g.broj_stanovnika" +
