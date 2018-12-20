@@ -8,7 +8,6 @@ public class GeografijaDAO {
     //postaviti konekciju u konstruktoru
     //napuniti bazu podacima
 
-    
     private static GeografijaDAO instance = null;
     private Connection con;
     //private String url;
