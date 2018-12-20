@@ -7,8 +7,8 @@ public class GeografijaDAO {
     private static GeografijaDAO instance = null;
     private Connection con;
     //private String url;
-    //private Statement statement;
-    private PreparedStatement procitajGlGrad;
+    private Statement statement;
+    private PreparedStatement procitajGlGrad, procitajDrzavu;
 
     private static void initialize() throws SQLException {
         instance = new GeografijaDAO();
@@ -23,6 +23,10 @@ public class GeografijaDAO {
         procitajGlGrad = con.prepareStatement("SELECT g.naziv, g.broj_stanovnika" +
                 "FROM grad g, drzava d" +
                 "WHERE g.id = d.glavni_grad AND d.naziv = ?");
+
+        procitajDrzavu = con.prepareStatement("SELECT id " +
+                                                   "FROM drzava" +
+                                                   "WHERE naziv = ?");
 
 
         //ako datoteka baza.db ne postoji napuniti podacima za
@@ -41,9 +45,6 @@ public class GeografijaDAO {
     }
 
     public Grad glavniGrad(String drzava) throws SQLException {
-        /*PreparedStatement procitajGlGrad = con.prepareStatement("SELECT g.naziv, g.broj_stanovnika" +
-                                                                      "FROM grad g, drzava d" +
-                                                                      "WHERE g.id = d.glavni_grad AND d.naziv = ?");*/
         procitajGlGrad.setString(1, drzava);
         ResultSet result = procitajGlGrad.executeQuery();
         if(!result.next()) return null;
@@ -52,5 +53,15 @@ public class GeografijaDAO {
         procitaniGrad.getDrzava().setGlavniGrad(procitaniGrad);
 
         return procitaniGrad;
+    }
+
+    public void obrisiDrzavu(String drzava) throws SQLException {
+        procitajDrzavu.setString(1,drzava);
+        ResultSet result = procitajDrzavu.executeQuery();
+        if(!result.next()) return;
+
+        statement = con.createStatement();
+        statement.executeUpdate("DELETE FROM grad WHERE drzava = " + result.getInt(1));
+        statement.executeUpdate("DELETE FROM drzava WHERE id = " + result.getInt(1));
     }
 }
