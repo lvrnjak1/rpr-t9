@@ -4,6 +4,11 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class GeografijaDAO {
+    //TODO
+    //postaviti konekciju u konstruktoru
+    //napuniti bazu podacima
+
+    
     private static GeografijaDAO instance = null;
     private Connection con;
     //private String url;
