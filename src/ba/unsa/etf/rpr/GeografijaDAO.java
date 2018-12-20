@@ -138,7 +138,9 @@ public class GeografijaDAO {
         ResultSet gradId = statement.executeQuery("SELECT id FROM grad WHERE naziv = " + drzava.getGlavniGrad().getNaziv());
 
         //ako taj gl grad ne postoji
+        boolean azuriraj = false;
         if(!gradId.next()) {
+            azuriraj = true;
             upit.setNull(2, Types.INTEGER);
             //ovime se izbjegne da ne dodje do beskonacnog pozivanja dodaj grad dodaj drzavu
         }
@@ -147,13 +149,15 @@ public class GeografijaDAO {
 
         upit.executeUpdate();
 
-        //sad je drzava dodana pa mozemo dodati grad
-        dodajGrad(drzava.getGlavniGrad());
-        //uzmi id dodanog grada
-        ResultSet grad = statement.executeQuery("SELECT id FROM grad WHERE naziv = " + drzava.getGlavniGrad().getNaziv());
+        if(azuriraj) {
+            //sad je drzava dodana pa mozemo dodati grad
+            dodajGrad(drzava.getGlavniGrad());
+            //uzmi id dodanog grada
+            ResultSet grad = statement.executeQuery("SELECT id FROM grad WHERE naziv = " + drzava.getGlavniGrad().getNaziv());
 
-
-        statement.executeUpdate("UPDATE drzava SET glavni_grad = " + grad.getInt(1) + "WHERE naziv = " + drzava.getNaziv());
+            //postavi gl grad na dodani grad (sto je bilo null)
+            statement.executeUpdate("UPDATE drzava SET glavni_grad = " + grad.getInt(1) + "WHERE naziv = " + drzava.getNaziv());
+        }
     }
 
     public Drzava nadjiDrzavu(String drzava) throws SQLException {
@@ -165,5 +169,9 @@ public class GeografijaDAO {
         Drzava d = new Drzava(drzava, glavniGrad(drzava));
 
         return d;
+    }
+
+    public void izmijeniGrad(Grad grad){
+
     }
 }
