@@ -40,4 +40,9 @@ public class Grad {
     public void setDrzava(Drzava drzava) {
         this.drzava = drzava;
     }
+
+    @Override
+    public String toString() {
+        return getNaziv() + " (" + getDrzava().getNaziv() + ") - " + getBrStanovnika() + "\n";
+    }
 }
