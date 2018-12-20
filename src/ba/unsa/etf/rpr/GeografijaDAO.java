@@ -114,7 +114,7 @@ public class GeografijaDAO {
         //treba dodati nju i njen glavni grad
         //nadajmo se da to radi ova metoda
         if(!drzavaId.next()) {
-            dodajDrzavu(grad.getDrzava().getNaziv());
+            dodajDrzavu(grad.getDrzava());
             //uzmi taj dodani id
             ResultSet drzavaId1 = statement.executeQuery("SELECT id FROM drzava WHERE naziv = " + grad.getDrzava().getNaziv());
             upit.setInt(3, drzavaId1.getInt(1));
@@ -125,7 +125,34 @@ public class GeografijaDAO {
         upit.executeUpdate();
     }
 
-    private void dodajDrzavu(String drzava) {
+    private void dodajDrzavu(Drzava drzava) throws SQLException {
+        //provjeriti da li vec postoji
+        statement = con.createStatement();
+        ResultSet postoji = statement.executeQuery("SELECT id FROM drzava WHERE naziv = " + drzava.getNaziv());
+        if (postoji.next()) return;
 
+        PreparedStatement upit = con.prepareStatement("INSERT INTO drzava (naziv, glavni_grad) VALUES (?, ?)");
+        upit.setString(1, drzava.getNaziv());
+
+        //dobijem id glavnog grada drzava iz parametra metode
+        ResultSet gradId = statement.executeQuery("SELECT id FROM grad WHERE naziv = " + drzava.getGlavniGrad().getNaziv());
+
+        //ako taj gl grad ne postoji
+        if(!gradId.next()) {
+            upit.setNull(2, Types.INTEGER);
+            //ovime se izbjegne da ne dodje do beskonacnog pozivanja dodaj grad dodaj drzavu
+        }
+        else
+            upit.setInt(2, gradId.getInt(1));
+
+        upit.executeUpdate();
+
+        //sad je drzava dodana pa mozemo dodati grad
+        dodajGrad(drzava.getGlavniGrad());
+        //uzmi id dodanog grada
+        ResultSet grad = statement.executeQuery("SELECT id FROM grad WHERE naziv = " + drzava.getGlavniGrad().getNaziv());
+
+
+        statement.executeUpdate("UPDATE drzava SET glavni_grad = " + grad.getInt(1) + "WHERE naziv = " + drzava.getNaziv());
     }
 }
