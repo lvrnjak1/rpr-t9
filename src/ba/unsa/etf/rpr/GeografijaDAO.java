@@ -98,13 +98,15 @@ public class GeografijaDAO {
 
     public void dodajGrad(Grad grad) throws SQLException {
         //provjeriti da li vec postoji
-
+        statement = con.createStatement();
+        ResultSet postoji = statement.executeQuery("SELECT id FROM grad WHERE naziv = " + grad.getNaziv());
+        if(postoji.next()) return;
 
         PreparedStatement upit = con.prepareStatement("INSERT INTO grad (naziv, broj_stanovnika, drzava) VALUES (?, ?, ?)");
         upit.setString(1,grad.getNaziv());
         upit.setInt(2,grad.getBrStanovnika());
 
-        statement = con.createStatement();
+        //statement = con.createStatement();
         //ovim upitom dobijem id drzave u kojoj se grad iz parametra metode nalazi
         ResultSet drzavaId = statement.executeQuery("SELECT id FROM drzava WHERE naziv = " + grad.getDrzava().getNaziv());
 
