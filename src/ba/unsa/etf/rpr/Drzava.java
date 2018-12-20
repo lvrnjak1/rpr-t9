@@ -9,6 +9,11 @@ public class Drzava {
         setGlavniGrad(null);
     }
 
+    public Drzava(String n, Grad g){
+        setNaziv(n);
+        setGlavniGrad(g);
+    }
+
     public String getNaziv() {
         return naziv;
     }

@@ -11,6 +11,12 @@ public class Grad {
         setDrzava(null);
     }
 
+    public Grad(String n, int b, Drzava d){
+        setNaziv(n);
+        setBrStanovnika(b);
+        setDrzava(d);
+    }
+
     public String getNaziv() {
         return naziv;
     }
