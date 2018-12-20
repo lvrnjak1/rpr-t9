@@ -171,7 +171,22 @@ public class GeografijaDAO {
         return d;
     }
 
-    public void izmijeniGrad(Grad grad){
+    public void izmijeniGrad(Grad grad) throws SQLException {
+        ResultSet g = statement.executeQuery("SELECT id FROM grad WHERE naziv = " + grad.getNaziv());
+        if(!g.next()) return; //grad ne postoji nema se sta izmijeniti
 
+        statement = con.createStatement();
+        statement.executeUpdate("UPDATE grad SET broj_stanovnika = " + grad.getBrStanovnika() +
+                "WHERE naziv =" + grad.getNaziv());
+
+        procitajDrzavu.setString(1,grad.getDrzava().getNaziv());
+        ResultSet d = procitajDrzavu.executeQuery();
+        if(!d.next()) {
+            dodajDrzavu(grad.getDrzava()); //drzava ne postoji pa je treba dodati
+            d = procitajDrzavu.executeQuery(); //sad uzmi id
+        }
+
+        statement.executeUpdate("UPDATE grad SET drzava = " + d.getInt(1) +
+                "WHERE naziv =" + grad.getDrzava().getNaziv()); //azuriraj drzavz
     }
 }
