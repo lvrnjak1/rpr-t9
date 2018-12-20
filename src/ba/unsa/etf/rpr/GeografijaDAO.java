@@ -96,5 +96,34 @@ public class GeografijaDAO {
        return gradovi;
     }
 
-    
+    public void dodajGrad(Grad grad) throws SQLException {
+        //provjeriti da li vec postoji
+
+
+        PreparedStatement upit = con.prepareStatement("INSERT INTO grad (naziv, broj_stanovnika, drzava) VALUES (?, ?, ?)");
+        upit.setString(1,grad.getNaziv());
+        upit.setInt(2,grad.getBrStanovnika());
+
+        statement = con.createStatement();
+        //ovim upitom dobijem id drzave u kojoj se grad iz parametra metode nalazi
+        ResultSet drzavaId = statement.executeQuery("SELECT id FROM drzava WHERE naziv = " + grad.getDrzava().getNaziv());
+
+        //ako nema te drzave
+        //treba dodati nju i njen glavni grad
+        //nadajmo se da to radi ova metoda
+        if(!drzavaId.next()) {
+            dodajDrzavu(grad.getDrzava().getNaziv());
+            //uzmi taj dodani id
+            ResultSet drzavaId1 = statement.executeQuery("SELECT id FROM drzava WHERE naziv = " + grad.getDrzava().getNaziv());
+            upit.setInt(3, drzavaId1.getInt(1));
+        }
+        else
+            upit.setInt(3, drzavaId.getInt(1));
+
+        upit.executeUpdate();
+    }
+
+    private void dodajDrzavu(String drzava) {
+
+    }
 }
