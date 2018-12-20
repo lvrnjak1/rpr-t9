@@ -155,4 +155,15 @@ public class GeografijaDAO {
 
         statement.executeUpdate("UPDATE drzava SET glavni_grad = " + grad.getInt(1) + "WHERE naziv = " + drzava.getNaziv());
     }
+
+    public Drzava nadjiDrzavu(String drzava) throws SQLException {
+        procitajDrzavu.setString(1,drzava);
+        ResultSet drzavaId = procitajDrzavu.executeQuery();
+
+        if(!drzavaId.next()) return null;
+
+        Drzava d = new Drzava(drzava, glavniGrad(drzava));
+
+        return d;
+    }
 }
