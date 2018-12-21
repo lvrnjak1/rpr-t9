@@ -6,9 +6,10 @@ import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) throws SQLException {
-        System.out.println("Gradovi su:\n" + ispisiGradove());
-        glavniGrad();
+   /*public static void main(String[] args) throws SQLException {
+        //System.out.println("Gradovi su:\n" + ispisiGradove());
+        //glavniGrad();
+       ispisiGradove();
     }
 
     private static String ispisiGradove() throws SQLException {
@@ -32,5 +33,9 @@ public class Main {
         if(glGrad == null)
             System.out.println("Nepostojeća država");
         System.out.println("Glavni grad države " + drzava + " je " + glGrad.getNaziv());
+    }*/
+
+    public static void main(String[] args) throws SQLException {
+        GeografijaDAO.getInstance();
     }
 }
